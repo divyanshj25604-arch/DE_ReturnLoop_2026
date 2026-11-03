@@ -1,20 +1,20 @@
 {
   "team_number": "T0073",
   "group_lead": {
-    "name": "Divyansh Jha",
-    "enrollment_no": "2501010604",
-    "github": "divyanshj25604-arch"
+    "name": "Devanshi Kumari",
+    "enrollment_no": "2501010139",
+    "github": "Devanshiheree"
   },
   "members": [
-    {
-      "name": "Devanshi Kumari",
-      "enrollment_no": "2501010139",
-      "github": "Devanshiheree"
-    },
     {
       "name": "Shreyansh Rathaur",
       "enrollment_no": "2501010439",
       "github": "shreyanshrathaur"
+    },
+    {
+      "name": "Divyansh Jha",
+      "enrollment_no": "2501010604",
+      "github": "divyanshj25604-arch"
     },
     {
       "name": "Parth Sharma",
@@ -23,5 +23,5 @@
     }
   ],
   "postgres_version": "15",
-  "laptop_used_for_benchmarks": "MacBook Pro "
+  "laptop_used_for_benchmarks": "MacBook Pro"
 }
