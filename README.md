@@ -24,7 +24,7 @@
 **Team No.:** T0073  
 **Section:** E  
 **Mentor:** Vishnu  
-**Group Lead:** Divyansh Jha
+**Group Lead:** Devanshi Kumari
 
 | Role | Name | Enrollment No. | GitHub Username |
 |------|------|----------------|-----------------|
