@@ -18,16 +18,24 @@
 
 ---
 
-## Team details (fill in before you start)
+## Team details
+
+**Team Name:** Return Loop  
+**Team No.:** T0073  
+**Section:** E  
+**Mentor:** Vishnu  
+**Group Lead:** To be confirmed from the four team members
 
 | Role | Name | Enrollment No. | GitHub Username |
 |------|------|----------------|-----------------|
-| Group Lead | | | |
-| Member 2 | | | |
-| Member 3 | | | |
-| Member 4 | | | |
+| Team member (lead TBD) | Devanshi Kumari | Pending | [Devanshiheree](https://github.com/Devanshiheree) |
+| Team member (lead TBD) | Shreyansh Rathaur | Pending | [shreyanshrathaur](https://github.com/shreyanshrathaur) |
+| Team member (lead TBD) | Divyansh Jha | Pending | [divyanshj25604-arch](https://github.com/divyanshj25604-arch) |
+| Team member (lead TBD) | Parth Sharma | Pending | [p4rths1105](https://github.com/p4rths1105) |
 
-**Team No.:** ____ · **Section:** ____ · **Repository URL:** ____
+**DE Repository:** https://github.com/divyanshj25604-arch/DE_ReturnLoop_2026  
+**AP Repository:** https://github.com/divyanshj25604-arch/ReturnLoop_AP_2026  
+**Original Project Repository:** https://github.com/edusatyaki/DBMS-Blinkit-Grocery-Delivery
 
 ---
 
