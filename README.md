@@ -28,10 +28,10 @@
 
 | Role | Name | Enrollment No. | GitHub Username |
 |------|------|----------------|-----------------|
-| Team member (lead TBD) | Devanshi Kumari | Pending | [Devanshiheree](https://github.com/Devanshiheree) |
-| Team member (lead TBD) | Shreyansh Rathaur | Pending | [shreyanshrathaur](https://github.com/shreyanshrathaur) |
-| Team member (lead TBD) | Divyansh Jha | Pending | [divyanshj25604-arch](https://github.com/divyanshj25604-arch) |
-| Team member (lead TBD) | Parth Sharma | Pending | [p4rths1105](https://github.com/p4rths1105) |
+| Team Leader  | Devanshi Kumari | 2501010139 | [Devanshiheree](https://github.com/Devanshiheree) |
+| Team member  | Shreyansh Rathaur | 2501010439 | [shreyanshrathaur](https://github.com/shreyanshrathaur) |
+| Team member  | Divyansh Jha | 2501010604 | [divyanshj25604-arch](https://github.com/divyanshj25604-arch) |
+| Team member  | Parth Sharma | 2501010321 | [p4rths1105](https://github.com/p4rths1105) |
 
 **DE Repository:** https://github.com/divyanshj25604-arch/DE_ReturnLoop_2026  
 **AP Repository:** https://github.com/divyanshj25604-arch/ReturnLoop_AP_2026  
