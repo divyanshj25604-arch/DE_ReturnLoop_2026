@@ -24,7 +24,7 @@
 **Team No.:** T0073  
 **Section:** E  
 **Mentor:** Vishnu  
-**Group Lead:** Divyansh jha
+**Group Lead:** Divyansh Jha
 
 | Role | Name | Enrollment No. | GitHub Username |
 |------|------|----------------|-----------------|
