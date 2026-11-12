@@ -1,0 +1,273 @@
+
+-- =========================================================
+-- Team T0073 | ReturnLoop | DE Checkpoint 1
+-- Blinkit Grocery Delivery Database
+-- PostgreSQL 15
+-- =========================================================
+
+CREATE SCHEMA IF NOT EXISTS blinkit;
+
+SET search_path TO blinkit, public;
+
+-- 1. CITIES
+CREATE TABLE cities (
+    city_id INTEGER PRIMARY KEY,
+    city_name VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
+    CONSTRAINT chk_city_name
+        CHECK (LENGTH(TRIM(city_name)) > 0)
+);
+
+-- 2. DARK STORES
+CREATE TABLE dark_stores (
+    store_id INTEGER PRIMARY KEY,
+    store_code VARCHAR(30) NOT NULL UNIQUE,
+    city_id INTEGER NOT NULL,
+    latitude NUMERIC(10,7),
+    longitude NUMERIC(10,7),
+    opened_on DATE,
+    is_active BOOLEAN NOT NULL,
+    max_daily_orders INTEGER,
+
+    CONSTRAINT fk_store_city
+        FOREIGN KEY (city_id)
+        REFERENCES cities(city_id),
+
+    CONSTRAINT chk_store_latitude
+        CHECK (latitude BETWEEN -90 AND 90),
+
+    CONSTRAINT chk_store_longitude
+        CHECK (longitude BETWEEN -180 AND 180),
+
+    CONSTRAINT chk_store_capacity
+        CHECK (max_daily_orders > 0)
+);
+
+-- 3. CATEGORIES
+CREATE TABLE categories (
+    category_id INTEGER PRIMARY KEY,
+    category_name VARCHAR(100) NOT NULL UNIQUE,
+    is_perishable BOOLEAN NOT NULL
+);
+
+-- 4. PRODUCTS
+CREATE TABLE products (
+    product_id INTEGER PRIMARY KEY,
+    sku VARCHAR(30) NOT NULL UNIQUE,
+    product_name VARCHAR(255) NOT NULL,
+    brand VARCHAR(100),
+    category_id INTEGER NOT NULL,
+    pack_size VARCHAR(50),
+    mrp NUMERIC(10,2),
+    shelf_life_days INTEGER,
+    is_active BOOLEAN NOT NULL,
+
+    CONSTRAINT fk_product_category
+        FOREIGN KEY (category_id)
+        REFERENCES categories(category_id),
+
+    CONSTRAINT chk_product_mrp
+        CHECK (mrp > 0),
+
+    CONSTRAINT chk_product_shelf_life
+        CHECK (shelf_life_days > 0)
+);
+
+-- 5. CUSTOMERS
+CREATE TABLE customers (
+    customer_id INTEGER PRIMARY KEY,
+    full_name VARCHAR(150) NOT NULL,
+    phone VARCHAR(20) NOT NULL UNIQUE,
+    email VARCHAR(255),
+    city_id INTEGER NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+
+    CONSTRAINT fk_customer_city
+        FOREIGN KEY (city_id)
+        REFERENCES cities(city_id),
+
+    CONSTRAINT chk_customer_phone
+        CHECK (LENGTH(TRIM(phone)) >= 10)
+);
+
+-- 6. RIDERS
+CREATE TABLE riders (
+    rider_id INTEGER PRIMARY KEY,
+    full_name VARCHAR(150) NOT NULL,
+    phone VARCHAR(20) NOT NULL UNIQUE,
+    store_id INTEGER NOT NULL,
+    joined_on DATE NOT NULL,
+    status VARCHAR(20) NOT NULL,
+
+    CONSTRAINT fk_rider_store
+        FOREIGN KEY (store_id)
+        REFERENCES dark_stores(store_id),
+
+    CONSTRAINT chk_rider_status
+        CHECK (status IN ('ACTIVE', 'ON_LEAVE', 'EXITED'))
+);
+
+-- 7. ORDERS
+CREATE TABLE orders (
+    order_id INTEGER PRIMARY KEY,
+    customer_id INTEGER NOT NULL,
+    store_id INTEGER NOT NULL,
+    rider_id INTEGER,
+    placed_at TIMESTAMPTZ NOT NULL,
+    packed_at TIMESTAMPTZ,
+    picked_up_at TIMESTAMPTZ,
+    delivered_at TIMESTAMPTZ,
+    promised_minutes INTEGER,
+    subtotal NUMERIC(10,2),
+    delivery_fee NUMERIC(10,2),
+    handling_fee NUMERIC(10,2),
+    small_cart_fee NUMERIC(10,2),
+    total_amount NUMERIC(10,2),
+    payment_method VARCHAR(20),
+    status VARCHAR(30),
+
+    CONSTRAINT fk_order_customer
+        FOREIGN KEY (customer_id)
+        REFERENCES customers(customer_id),
+
+    CONSTRAINT fk_order_store
+        FOREIGN KEY (store_id)
+        REFERENCES dark_stores(store_id),
+
+    CONSTRAINT fk_order_rider
+        FOREIGN KEY (rider_id)
+        REFERENCES riders(rider_id),
+
+    CONSTRAINT chk_promised_minutes
+        CHECK (promised_minutes > 0),
+
+    CONSTRAINT chk_order_subtotal
+        CHECK (subtotal >= 0),
+
+    CONSTRAINT chk_delivery_fee
+        CHECK (delivery_fee >= 0),
+
+    CONSTRAINT chk_handling_fee
+        CHECK (handling_fee >= 0),
+
+    CONSTRAINT chk_small_cart_fee
+        CHECK (small_cart_fee >= 0),
+
+    CONSTRAINT chk_total_amount
+        CHECK (total_amount >= 0),
+
+    CONSTRAINT chk_payment_method
+        CHECK (payment_method IN
+            ('UPI', 'COD', 'WALLET', 'CARD')),
+
+    CONSTRAINT chk_order_status
+        CHECK (status IN (
+            'DELIVERED',
+            'CANCELLED',
+            'PACKING',
+            'OUT_FOR_DELIVERY',
+            'PLACED'
+        ))
+);
+
+-- 8. ORDER ITEMS
+CREATE TABLE order_items (
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity_ordered INTEGER NOT NULL,
+    quantity_delivered INTEGER NOT NULL,
+    unit_price NUMERIC(10,2) NOT NULL,
+    substitute_product_id INTEGER,
+
+    CONSTRAINT pk_order_items
+        PRIMARY KEY (order_id, product_id),
+
+    CONSTRAINT fk_item_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(order_id),
+
+    CONSTRAINT fk_item_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(product_id),
+
+    CONSTRAINT fk_item_substitute
+        FOREIGN KEY (substitute_product_id)
+        REFERENCES products(product_id),
+
+    CONSTRAINT chk_quantity_ordered
+        CHECK (quantity_ordered > 0),
+
+    CONSTRAINT chk_quantity_delivered
+        CHECK (quantity_delivered >= 0),
+
+    CONSTRAINT chk_unit_price
+        CHECK (unit_price >= 0)
+);
+
+-- 9. STORE INVENTORY
+CREATE TABLE store_inventory (
+    store_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity_on_hand INTEGER NOT NULL,
+    reorder_level INTEGER NOT NULL,
+    selling_price NUMERIC(10,2) NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+
+    CONSTRAINT pk_store_inventory
+        PRIMARY KEY (store_id, product_id),
+
+    CONSTRAINT fk_inventory_store
+        FOREIGN KEY (store_id)
+        REFERENCES dark_stores(store_id),
+
+    CONSTRAINT fk_inventory_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(product_id),
+
+    CONSTRAINT chk_inventory_quantity
+        CHECK (quantity_on_hand >= 0),
+
+    CONSTRAINT chk_reorder_level
+        CHECK (reorder_level >= 0),
+
+    CONSTRAINT chk_selling_price
+        CHECK (selling_price > 0)
+);
+
+-- 10. INVENTORY MOVEMENTS
+CREATE TABLE inventory_movements (
+    movement_id INTEGER PRIMARY KEY,
+    store_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    movement_type VARCHAR(20) NOT NULL,
+    quantity INTEGER NOT NULL,
+    moved_at TIMESTAMPTZ NOT NULL,
+
+    CONSTRAINT fk_movement_store
+        FOREIGN KEY (store_id)
+        REFERENCES dark_stores(store_id),
+
+    CONSTRAINT fk_movement_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(product_id),
+
+    CONSTRAINT chk_movement_type
+        CHECK (movement_type IN (
+            'RESTOCK',
+            'ADJUSTMENT',
+            'DAMAGE',
+            'EXPIRY'
+        )),
+
+    CONSTRAINT chk_movement_quantity
+        CHECK (quantity <> 0)
+);
+
+-- =========================================================
+-- Schema verification
+-- =========================================================
+
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'blinkit'
+ORDER BY table_name;
