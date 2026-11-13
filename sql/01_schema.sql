@@ -200,15 +200,18 @@ CREATE TABLE order_items (
 
     CONSTRAINT fk_item_order
         FOREIGN KEY (order_id)
-        REFERENCES orders(order_id),
+        REFERENCES orders(order_id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_item_product
         FOREIGN KEY (product_id)
-        REFERENCES products(product_id),
+        REFERENCES products(product_id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_item_substitute
         FOREIGN KEY (substitute_product_id)
-        REFERENCES products(product_id),
+        REFERENCES products(product_id)
+        ON DELETE SET NULL,
 
     CONSTRAINT chk_quantity_ordered
         CHECK (quantity_ordered > 0),
@@ -216,8 +219,14 @@ CREATE TABLE order_items (
     CONSTRAINT chk_quantity_delivered
         CHECK (quantity_delivered >= 0),
 
+    CONSTRAINT chk_delivered_le_ordered
+        CHECK (quantity_delivered <= quantity_ordered),
+
     CONSTRAINT chk_unit_price
-        CHECK (unit_price >= 0)
+        CHECK (unit_price >= 0),
+
+    CONSTRAINT chk_substitute_not_self
+        CHECK (substitute_product_id IS NULL OR substitute_product_id <> product_id)
 );
 
 -- 9. STORE INVENTORY
@@ -234,11 +243,13 @@ CREATE TABLE store_inventory (
 
     CONSTRAINT fk_inventory_store
         FOREIGN KEY (store_id)
-        REFERENCES dark_stores(store_id),
+        REFERENCES dark_stores(store_id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_inventory_product
         FOREIGN KEY (product_id)
-        REFERENCES products(product_id),
+        REFERENCES products(product_id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT chk_inventory_quantity
         CHECK (quantity_on_hand >= 0),
@@ -261,22 +272,28 @@ CREATE TABLE inventory_movements (
 
     CONSTRAINT fk_movement_store
         FOREIGN KEY (store_id)
-        REFERENCES dark_stores(store_id),
+        REFERENCES dark_stores(store_id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_movement_product
         FOREIGN KEY (product_id)
-        REFERENCES products(product_id),
+        REFERENCES products(product_id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_movement_store_inventory
+        FOREIGN KEY (store_id, product_id)
+        REFERENCES store_inventory(store_id, product_id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT chk_movement_type
-        CHECK (movement_type IN (
-            'RESTOCK',
-            'ADJUSTMENT',
-            'DAMAGE',
-            'EXPIRY'
-        )),
+        CHECK (movement_type IN ('RESTOCK', 'ADJUSTMENT', 'DAMAGE', 'EXPIRY')),
 
-    CONSTRAINT chk_movement_quantity
-        CHECK (quantity <> 0)
+    CONSTRAINT chk_movement_quantity_by_type
+        CHECK (
+            (movement_type = 'RESTOCK' AND quantity > 0) OR
+            (movement_type IN ('DAMAGE', 'EXPIRY') AND quantity < 0) OR
+            (movement_type = 'ADJUSTMENT' AND quantity <> 0)
+        )
 );
 
 -- =========================================================
