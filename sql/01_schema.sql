@@ -14,6 +14,7 @@ CREATE TABLE cities (
     city_id INTEGER PRIMARY KEY,
     city_name VARCHAR(100) NOT NULL,
     state VARCHAR(100) NOT NULL,
+
     CONSTRAINT chk_city_name
         CHECK (LENGTH(TRIM(city_name)) > 0)
 );
@@ -23,15 +24,19 @@ CREATE TABLE dark_stores (
     store_id INTEGER PRIMARY KEY,
     store_code VARCHAR(30) NOT NULL UNIQUE,
     city_id INTEGER NOT NULL,
-    latitude NUMERIC(10,7),
-    longitude NUMERIC(10,7),
-    opened_on DATE,
+    latitude NUMERIC(10,7) NOT NULL,
+    longitude NUMERIC(10,7) NOT NULL,
+    opened_on DATE NOT NULL,
     is_active BOOLEAN NOT NULL,
-    max_daily_orders INTEGER,
+    max_daily_orders INTEGER NOT NULL,
 
     CONSTRAINT fk_store_city
         FOREIGN KEY (city_id)
-        REFERENCES cities(city_id),
+        REFERENCES cities(city_id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT chk_store_code_format
+        CHECK (store_code ~ '^[A-Z]{3}-[A-Z]{3}-[0-9]{2}$'),
 
     CONSTRAINT chk_store_latitude
         CHECK (latitude BETWEEN -90 AND 90),
@@ -55,22 +60,26 @@ CREATE TABLE products (
     product_id INTEGER PRIMARY KEY,
     sku VARCHAR(30) NOT NULL UNIQUE,
     product_name VARCHAR(255) NOT NULL,
-    brand VARCHAR(100),
+    brand VARCHAR(100) NOT NULL,
     category_id INTEGER NOT NULL,
-    pack_size VARCHAR(50),
-    mrp NUMERIC(10,2),
+    pack_size VARCHAR(50) NOT NULL,
+    mrp NUMERIC(10,2) NOT NULL,
     shelf_life_days INTEGER,
     is_active BOOLEAN NOT NULL,
 
     CONSTRAINT fk_product_category
         FOREIGN KEY (category_id)
-        REFERENCES categories(category_id),
+        REFERENCES categories(category_id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT chk_product_sku_format
+        CHECK (sku ~ '^BK[0-9]{8}$'),
 
     CONSTRAINT chk_product_mrp
         CHECK (mrp > 0),
 
     CONSTRAINT chk_product_shelf_life
-        CHECK (shelf_life_days > 0)
+        CHECK (shelf_life_days IS NULL OR shelf_life_days > 0)
 );
 
 -- 5. CUSTOMERS
@@ -78,16 +87,20 @@ CREATE TABLE customers (
     customer_id INTEGER PRIMARY KEY,
     full_name VARCHAR(150) NOT NULL,
     phone VARCHAR(20) NOT NULL UNIQUE,
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     city_id INTEGER NOT NULL,
     created_at TIMESTAMPTZ NOT NULL,
 
     CONSTRAINT fk_customer_city
         FOREIGN KEY (city_id)
-        REFERENCES cities(city_id),
+        REFERENCES cities(city_id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT chk_customer_phone
-        CHECK (LENGTH(TRIM(phone)) >= 10)
+        CHECK (phone ~ '^[0-9]{10}$'),
+
+    CONSTRAINT chk_customer_email
+        CHECK (email IS NULL OR email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')
 );
 
 -- 6. RIDERS
@@ -101,7 +114,11 @@ CREATE TABLE riders (
 
     CONSTRAINT fk_rider_store
         FOREIGN KEY (store_id)
-        REFERENCES dark_stores(store_id),
+        REFERENCES dark_stores(store_id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT chk_rider_phone
+        CHECK (phone ~ '^[0-9]{10}$'),
 
     CONSTRAINT chk_rider_status
         CHECK (status IN ('ACTIVE', 'ON_LEAVE', 'EXITED'))
