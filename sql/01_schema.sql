@@ -134,57 +134,56 @@ CREATE TABLE orders (
     packed_at TIMESTAMPTZ,
     picked_up_at TIMESTAMPTZ,
     delivered_at TIMESTAMPTZ,
-    promised_minutes INTEGER,
-    subtotal NUMERIC(10,2),
-    delivery_fee NUMERIC(10,2),
-    handling_fee NUMERIC(10,2),
-    small_cart_fee NUMERIC(10,2),
-    total_amount NUMERIC(10,2),
-    payment_method VARCHAR(20),
-    status VARCHAR(30),
+    promised_minutes INTEGER NOT NULL DEFAULT 10,
+    subtotal NUMERIC(10,2) NOT NULL,
+    delivery_fee NUMERIC(10,2) NOT NULL,
+    handling_fee NUMERIC(10,2) NOT NULL,
+    small_cart_fee NUMERIC(10,2) NOT NULL,
+    total_amount NUMERIC(10,2) NOT NULL,
+    payment_method VARCHAR(20) NOT NULL,
+    status VARCHAR(30) NOT NULL,
 
     CONSTRAINT fk_order_customer
         FOREIGN KEY (customer_id)
-        REFERENCES customers(customer_id),
+        REFERENCES customers(customer_id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_order_store
         FOREIGN KEY (store_id)
-        REFERENCES dark_stores(store_id),
+        REFERENCES dark_stores(store_id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_order_rider
         FOREIGN KEY (rider_id)
-        REFERENCES riders(rider_id),
+        REFERENCES riders(rider_id)
+        ON DELETE SET NULL,
 
     CONSTRAINT chk_promised_minutes
         CHECK (promised_minutes > 0),
 
-    CONSTRAINT chk_order_subtotal
-        CHECK (subtotal >= 0),
+    CONSTRAINT chk_order_fees
+        CHECK (
+            subtotal >= 0 AND
+            delivery_fee >= 0 AND
+            handling_fee >= 0 AND
+            small_cart_fee >= 0
+        ),
 
-    CONSTRAINT chk_delivery_fee
-        CHECK (delivery_fee >= 0),
-
-    CONSTRAINT chk_handling_fee
-        CHECK (handling_fee >= 0),
-
-    CONSTRAINT chk_small_cart_fee
-        CHECK (small_cart_fee >= 0),
-
-    CONSTRAINT chk_total_amount
-        CHECK (total_amount >= 0),
+    CONSTRAINT chk_order_total_calculation
+        CHECK (total_amount = subtotal + delivery_fee + handling_fee + small_cart_fee),
 
     CONSTRAINT chk_payment_method
-        CHECK (payment_method IN
-            ('UPI', 'COD', 'WALLET', 'CARD')),
+        CHECK (payment_method IN ('UPI', 'COD', 'WALLET', 'CARD')),
 
     CONSTRAINT chk_order_status
-        CHECK (status IN (
-            'DELIVERED',
-            'CANCELLED',
-            'PACKING',
-            'OUT_FOR_DELIVERY',
-            'PLACED'
-        ))
+        CHECK (status IN ('DELIVERED', 'CANCELLED', 'PACKING', 'OUT_FOR_DELIVERY', 'PLACED')),
+
+    CONSTRAINT chk_order_timeline
+        CHECK (
+            (packed_at IS NULL OR packed_at >= placed_at) AND
+            (picked_up_at IS NULL OR packed_at IS NULL OR picked_up_at >= packed_at) AND
+            (delivered_at IS NULL OR picked_up_at IS NULL OR delivered_at >= picked_up_at)
+        )
 );
 
 -- 8. ORDER ITEMS
