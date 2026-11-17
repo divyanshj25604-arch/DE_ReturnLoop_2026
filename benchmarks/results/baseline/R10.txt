@@ -1,0 +1,105 @@
+=== R10 run 1 ===
+Sort  (cost=2360.97..2361.09 rows=48 width=26) (actual time=14.454..14.455 rows=17 loops=1)
+  Sort Key: ((- sum(m.quantity))) DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=757
+  ->  HashAggregate  (cost=2359.03..2359.63 rows=48 width=26) (actual time=14.430..14.432 rows=17 loops=1)
+        Group Key: c.category_name, m.movement_type
+        Batches: 1  Memory Usage: 24kB
+        Buffers: shared hit=754
+        ->  Nested Loop  (cost=59.90..2355.01 rows=535 width=22) (actual time=13.960..14.371 rows=570 loops=1)
+              Buffers: shared hit=754
+              ->  Hash Join  (cost=59.75..2340.15 rows=535 width=16) (actual time=13.737..14.071 rows=570 loops=1)
+                    Hash Cond: (m.product_id = p.product_id)
+                    Buffers: shared hit=730
+                    ->  Seq Scan on inventory_movements m  (cost=0.00..2279.00 rows=535 width=16) (actual time=13.476..13.765 rows=570 loops=1)
+                          Filter: (((movement_type)::text = ANY ('{EXPIRY,DAMAGE}'::text[])) AND (moved_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (moved_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                          Rows Removed by Filter: 89430
+                          Buffers: shared hit=704
+                    ->  Hash  (cost=41.00..41.00 rows=1500 width=8) (actual time=0.250..0.251 rows=1500 loops=1)
+                          Buckets: 2048  Batches: 1  Memory Usage: 75kB
+                          Buffers: shared hit=26
+                          ->  Seq Scan on products p  (cost=0.00..41.00 rows=1500 width=8) (actual time=0.004..0.141 rows=1500 loops=1)
+                                Buffers: shared hit=26
+              ->  Memoize  (cost=0.15..0.17 rows=1 width=14) (actual time=0.000..0.000 rows=1 loops=570)
+                    Cache Key: p.category_id
+                    Cache Mode: logical
+                    Hits: 558  Misses: 12  Evictions: 0  Overflows: 0  Memory Usage: 2kB
+                    Buffers: shared hit=24
+                    ->  Index Scan using categories_pkey on categories c  (cost=0.14..0.16 rows=1 width=14) (actual time=0.001..0.001 rows=1 loops=12)
+                          Index Cond: (category_id = p.category_id)
+                          Buffers: shared hit=24
+Planning:
+  Buffers: shared hit=322
+Planning Time: 1.778 ms
+Execution Time: 14.544 ms
+=== R10 run 2 ===
+Sort  (cost=2360.97..2361.09 rows=48 width=26) (actual time=10.232..10.235 rows=17 loops=1)
+  Sort Key: ((- sum(m.quantity))) DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=757
+  ->  HashAggregate  (cost=2359.03..2359.63 rows=48 width=26) (actual time=10.211..10.215 rows=17 loops=1)
+        Group Key: c.category_name, m.movement_type
+        Batches: 1  Memory Usage: 24kB
+        Buffers: shared hit=754
+        ->  Nested Loop  (cost=59.90..2355.01 rows=535 width=22) (actual time=9.198..10.091 rows=570 loops=1)
+              Buffers: shared hit=754
+              ->  Hash Join  (cost=59.75..2340.15 rows=535 width=16) (actual time=9.185..9.909 rows=570 loops=1)
+                    Hash Cond: (m.product_id = p.product_id)
+                    Buffers: shared hit=730
+                    ->  Seq Scan on inventory_movements m  (cost=0.00..2279.00 rows=535 width=16) (actual time=8.814..9.437 rows=570 loops=1)
+                          Filter: (((movement_type)::text = ANY ('{EXPIRY,DAMAGE}'::text[])) AND (moved_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (moved_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                          Rows Removed by Filter: 89430
+                          Buffers: shared hit=704
+                    ->  Hash  (cost=41.00..41.00 rows=1500 width=8) (actual time=0.357..0.357 rows=1500 loops=1)
+                          Buckets: 2048  Batches: 1  Memory Usage: 75kB
+                          Buffers: shared hit=26
+                          ->  Seq Scan on products p  (cost=0.00..41.00 rows=1500 width=8) (actual time=0.008..0.202 rows=1500 loops=1)
+                                Buffers: shared hit=26
+              ->  Memoize  (cost=0.15..0.17 rows=1 width=14) (actual time=0.000..0.000 rows=1 loops=570)
+                    Cache Key: p.category_id
+                    Cache Mode: logical
+                    Hits: 558  Misses: 12  Evictions: 0  Overflows: 0  Memory Usage: 2kB
+                    Buffers: shared hit=24
+                    ->  Index Scan using categories_pkey on categories c  (cost=0.14..0.16 rows=1 width=14) (actual time=0.001..0.001 rows=1 loops=12)
+                          Index Cond: (category_id = p.category_id)
+                          Buffers: shared hit=24
+Planning:
+  Buffers: shared hit=322
+Planning Time: 1.070 ms
+Execution Time: 10.308 ms
+=== R10 run 3 ===
+Sort  (cost=2360.97..2361.09 rows=48 width=26) (actual time=7.580..7.582 rows=17 loops=1)
+  Sort Key: ((- sum(m.quantity))) DESC
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=757
+  ->  HashAggregate  (cost=2359.03..2359.63 rows=48 width=26) (actual time=7.561..7.563 rows=17 loops=1)
+        Group Key: c.category_name, m.movement_type
+        Batches: 1  Memory Usage: 24kB
+        Buffers: shared hit=754
+        ->  Nested Loop  (cost=59.90..2355.01 rows=535 width=22) (actual time=7.066..7.507 rows=570 loops=1)
+              Buffers: shared hit=754
+              ->  Hash Join  (cost=59.75..2340.15 rows=535 width=16) (actual time=7.058..7.422 rows=570 loops=1)
+                    Hash Cond: (m.product_id = p.product_id)
+                    Buffers: shared hit=730
+                    ->  Seq Scan on inventory_movements m  (cost=0.00..2279.00 rows=535 width=16) (actual time=6.900..7.217 rows=570 loops=1)
+                          Filter: (((movement_type)::text = ANY ('{EXPIRY,DAMAGE}'::text[])) AND (moved_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (moved_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                          Rows Removed by Filter: 89430
+                          Buffers: shared hit=704
+                    ->  Hash  (cost=41.00..41.00 rows=1500 width=8) (actual time=0.151..0.151 rows=1500 loops=1)
+                          Buckets: 2048  Batches: 1  Memory Usage: 75kB
+                          Buffers: shared hit=26
+                          ->  Seq Scan on products p  (cost=0.00..41.00 rows=1500 width=8) (actual time=0.002..0.090 rows=1500 loops=1)
+                                Buffers: shared hit=26
+              ->  Memoize  (cost=0.15..0.17 rows=1 width=14) (actual time=0.000..0.000 rows=1 loops=570)
+                    Cache Key: p.category_id
+                    Cache Mode: logical
+                    Hits: 558  Misses: 12  Evictions: 0  Overflows: 0  Memory Usage: 2kB
+                    Buffers: shared hit=24
+                    ->  Index Scan using categories_pkey on categories c  (cost=0.14..0.16 rows=1 width=14) (actual time=0.000..0.000 rows=1 loops=12)
+                          Index Cond: (category_id = p.category_id)
+                          Buffers: shared hit=24
+Planning:
+  Buffers: shared hit=322
+Planning Time: 0.415 ms
+Execution Time: 7.608 ms

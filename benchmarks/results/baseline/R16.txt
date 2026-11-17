@@ -1,0 +1,75 @@
+=== R16 run 1 ===
+GroupAggregate  (cost=7738.82..149743380.70 rows=200 width=24) (actual time=32.133..35.208 rows=18 loops=1)
+  Group Key: f.cohort
+  Buffers: shared hit=4419
+  ->  Sort  (cost=7738.82..7822.79 rows=33588 width=12) (actual time=26.663..27.479 rows=39011 loops=1)
+        Sort Key: f.cohort
+        Sort Method: quicksort  Memory: 2756kB
+        Buffers: shared hit=2211
+        ->  Subquery Scan on f  (cost=4458.00..5213.73 rows=33588 width=12) (actual time=19.509..24.997 rows=39011 loops=1)
+              Buffers: shared hit=2208
+              ->  HashAggregate  (cost=4458.00..4877.85 rows=33588 width=12) (actual time=19.509..23.480 rows=39011 loops=1)
+                    Group Key: orders.customer_id
+                    Batches: 1  Memory Usage: 4113kB
+                    Buffers: shared hit=2208
+                    ->  Seq Scan on orders  (cost=0.00..3708.00 rows=150000 width=12) (actual time=0.005..5.399 rows=150000 loops=1)
+                          Buffers: shared hit=2208
+  SubPlan 2
+    ->  Seq Scan on orders o  (cost=0.00..4083.00 rows=8167 width=4) (actual time=3.804..4.172 rows=8241 loops=1)
+          Filter: (placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone)
+          Rows Removed by Filter: 141759
+          Buffers: shared hit=2208
+Planning:
+  Buffers: shared hit=84
+Planning Time: 0.181 ms
+Execution Time: 36.163 ms
+=== R16 run 2 ===
+GroupAggregate  (cost=7738.82..149743380.70 rows=200 width=24) (actual time=30.557..33.101 rows=18 loops=1)
+  Group Key: f.cohort
+  Buffers: shared hit=4419
+  ->  Sort  (cost=7738.82..7822.79 rows=33588 width=12) (actual time=24.617..25.394 rows=39011 loops=1)
+        Sort Key: f.cohort
+        Sort Method: quicksort  Memory: 2756kB
+        Buffers: shared hit=2211
+        ->  Subquery Scan on f  (cost=4458.00..5213.73 rows=33588 width=12) (actual time=17.470..23.032 rows=39011 loops=1)
+              Buffers: shared hit=2208
+              ->  HashAggregate  (cost=4458.00..4877.85 rows=33588 width=12) (actual time=17.469..21.642 rows=39011 loops=1)
+                    Group Key: orders.customer_id
+                    Batches: 1  Memory Usage: 4113kB
+                    Buffers: shared hit=2208
+                    ->  Seq Scan on orders  (cost=0.00..3708.00 rows=150000 width=12) (actual time=0.003..5.296 rows=150000 loops=1)
+                          Buffers: shared hit=2208
+  SubPlan 2
+    ->  Seq Scan on orders o  (cost=0.00..4083.00 rows=8167 width=4) (actual time=3.838..4.266 rows=8241 loops=1)
+          Filter: (placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone)
+          Rows Removed by Filter: 141759
+          Buffers: shared hit=2208
+Planning:
+  Buffers: shared hit=84
+Planning Time: 0.174 ms
+Execution Time: 33.234 ms
+=== R16 run 3 ===
+GroupAggregate  (cost=7738.82..149743380.70 rows=200 width=24) (actual time=31.436..33.836 rows=18 loops=1)
+  Group Key: f.cohort
+  Buffers: shared hit=4419
+  ->  Sort  (cost=7738.82..7822.79 rows=33588 width=12) (actual time=25.526..26.196 rows=39011 loops=1)
+        Sort Key: f.cohort
+        Sort Method: quicksort  Memory: 2756kB
+        Buffers: shared hit=2211
+        ->  Subquery Scan on f  (cost=4458.00..5213.73 rows=33588 width=12) (actual time=17.943..23.663 rows=39011 loops=1)
+              Buffers: shared hit=2208
+              ->  HashAggregate  (cost=4458.00..4877.85 rows=33588 width=12) (actual time=17.942..22.263 rows=39011 loops=1)
+                    Group Key: orders.customer_id
+                    Batches: 1  Memory Usage: 4113kB
+                    Buffers: shared hit=2208
+                    ->  Seq Scan on orders  (cost=0.00..3708.00 rows=150000 width=12) (actual time=0.004..5.272 rows=150000 loops=1)
+                          Buffers: shared hit=2208
+  SubPlan 2
+    ->  Seq Scan on orders o  (cost=0.00..4083.00 rows=8167 width=4) (actual time=4.482..4.825 rows=8241 loops=1)
+          Filter: (placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone)
+          Rows Removed by Filter: 141759
+          Buffers: shared hit=2208
+Planning:
+  Buffers: shared hit=84
+Planning Time: 0.212 ms
+Execution Time: 33.973 ms

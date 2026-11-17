@@ -1,0 +1,117 @@
+=== R12 run 1 ===
+Limit  (cost=11662.25..11662.27 rows=10 width=12) (actual time=11.265..12.088 rows=10 loops=1)
+  Buffers: shared hit=6230
+  ->  Sort  (cost=11662.25..11666.00 rows=1500 width=12) (actual time=11.264..12.086 rows=10 loops=1)
+        Sort Key: (count(*)) DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=6230
+        ->  Finalize GroupAggregate  (cost=11374.05..11629.83 rows=1500 width=12) (actual time=11.179..12.077 rows=23 loops=1)
+              Group Key: b.product_id
+              Buffers: shared hit=6227
+              ->  Gather Merge  (cost=11374.05..11605.51 rows=1864 width=12) (actual time=11.146..12.066 rows=69 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=6227
+                    ->  Partial GroupAggregate  (cost=10374.03..10390.34 rows=932 width=12) (actual time=9.830..9.899 rows=23 loops=3)
+                          Group Key: b.product_id
+                          Buffers: shared hit=6227
+                          ->  Sort  (cost=10374.03..10376.36 rows=932 width=4) (actual time=9.821..9.850 rows=735 loops=3)
+                                Sort Key: b.product_id
+                                Sort Method: quicksort  Memory: 25kB
+                                Buffers: shared hit=6227
+                                Worker 0:  Sort Method: quicksort  Memory: 25kB
+                                Worker 1:  Sort Method: quicksort  Memory: 25kB
+                                ->  Nested Loop  (cost=0.42..10328.06 rows=932 width=4) (actual time=0.040..9.767 rows=735 loops=3)
+                                      Buffers: shared hit=6213
+                                      ->  Parallel Seq Scan on order_items a  (cost=0.00..7851.62 rows=187 width=8) (actual time=0.027..9.164 rows=155 loops=3)
+                                            Filter: (product_id = 1236)
+                                            Rows Removed by Filter: 224845
+                                            Buffers: shared hit=4336
+                                      ->  Index Only Scan using pk_order_items on order_items b  (cost=0.42..13.19 rows=5 width=8) (actual time=0.003..0.003 rows=5 loops=466)
+                                            Index Cond: (order_id = a.order_id)
+                                            Filter: (product_id <> a.product_id)
+                                            Rows Removed by Filter: 1
+                                            Heap Fetches: 2672
+                                            Buffers: shared hit=1877
+Planning:
+  Buffers: shared hit=116
+Planning Time: 0.339 ms
+Execution Time: 12.129 ms
+=== R12 run 2 ===
+Limit  (cost=11662.25..11662.27 rows=10 width=12) (actual time=11.710..12.630 rows=10 loops=1)
+  Buffers: shared hit=6230
+  ->  Sort  (cost=11662.25..11666.00 rows=1500 width=12) (actual time=11.709..12.629 rows=10 loops=1)
+        Sort Key: (count(*)) DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=6230
+        ->  Finalize GroupAggregate  (cost=11374.05..11629.83 rows=1500 width=12) (actual time=11.597..12.621 rows=23 loops=1)
+              Group Key: b.product_id
+              Buffers: shared hit=6227
+              ->  Gather Merge  (cost=11374.05..11605.51 rows=1864 width=12) (actual time=11.589..12.611 rows=69 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=6227
+                    ->  Partial GroupAggregate  (cost=10374.03..10390.34 rows=932 width=12) (actual time=9.498..9.566 rows=23 loops=3)
+                          Group Key: b.product_id
+                          Buffers: shared hit=6227
+                          ->  Sort  (cost=10374.03..10376.36 rows=932 width=4) (actual time=9.490..9.521 rows=735 loops=3)
+                                Sort Key: b.product_id
+                                Sort Method: quicksort  Memory: 25kB
+                                Buffers: shared hit=6227
+                                Worker 0:  Sort Method: quicksort  Memory: 25kB
+                                Worker 1:  Sort Method: quicksort  Memory: 25kB
+                                ->  Nested Loop  (cost=0.42..10328.06 rows=932 width=4) (actual time=0.088..9.429 rows=735 loops=3)
+                                      Buffers: shared hit=6213
+                                      ->  Parallel Seq Scan on order_items a  (cost=0.00..7851.62 rows=187 width=8) (actual time=0.070..8.861 rows=155 loops=3)
+                                            Filter: (product_id = 1236)
+                                            Rows Removed by Filter: 224845
+                                            Buffers: shared hit=4336
+                                      ->  Index Only Scan using pk_order_items on order_items b  (cost=0.42..13.19 rows=5 width=8) (actual time=0.003..0.003 rows=5 loops=466)
+                                            Index Cond: (order_id = a.order_id)
+                                            Filter: (product_id <> a.product_id)
+                                            Rows Removed by Filter: 1
+                                            Heap Fetches: 2672
+                                            Buffers: shared hit=1877
+Planning:
+  Buffers: shared hit=116
+Planning Time: 0.219 ms
+Execution Time: 12.659 ms
+=== R12 run 3 ===
+Limit  (cost=11662.25..11662.27 rows=10 width=12) (actual time=11.241..11.981 rows=10 loops=1)
+  Buffers: shared hit=6230
+  ->  Sort  (cost=11662.25..11666.00 rows=1500 width=12) (actual time=11.240..11.980 rows=10 loops=1)
+        Sort Key: (count(*)) DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=6230
+        ->  Finalize GroupAggregate  (cost=11374.05..11629.83 rows=1500 width=12) (actual time=11.146..11.973 rows=23 loops=1)
+              Group Key: b.product_id
+              Buffers: shared hit=6227
+              ->  Gather Merge  (cost=11374.05..11605.51 rows=1864 width=12) (actual time=11.139..11.964 rows=69 loops=1)
+                    Workers Planned: 2
+                    Workers Launched: 2
+                    Buffers: shared hit=6227
+                    ->  Partial GroupAggregate  (cost=10374.03..10390.34 rows=932 width=12) (actual time=9.284..9.344 rows=23 loops=3)
+                          Group Key: b.product_id
+                          Buffers: shared hit=6227
+                          ->  Sort  (cost=10374.03..10376.36 rows=932 width=4) (actual time=9.277..9.303 rows=735 loops=3)
+                                Sort Key: b.product_id
+                                Sort Method: quicksort  Memory: 25kB
+                                Buffers: shared hit=6227
+                                Worker 0:  Sort Method: quicksort  Memory: 25kB
+                                Worker 1:  Sort Method: quicksort  Memory: 25kB
+                                ->  Nested Loop  (cost=0.42..10328.06 rows=932 width=4) (actual time=0.309..9.224 rows=735 loops=3)
+                                      Buffers: shared hit=6213
+                                      ->  Parallel Seq Scan on order_items a  (cost=0.00..7851.62 rows=187 width=8) (actual time=0.280..8.671 rows=155 loops=3)
+                                            Filter: (product_id = 1236)
+                                            Rows Removed by Filter: 224845
+                                            Buffers: shared hit=4336
+                                      ->  Index Only Scan using pk_order_items on order_items b  (cost=0.42..13.19 rows=5 width=8) (actual time=0.003..0.003 rows=5 loops=466)
+                                            Index Cond: (order_id = a.order_id)
+                                            Filter: (product_id <> a.product_id)
+                                            Rows Removed by Filter: 1
+                                            Heap Fetches: 2672
+                                            Buffers: shared hit=1877
+Planning:
+  Buffers: shared hit=116
+Planning Time: 0.222 ms
+Execution Time: 12.016 ms

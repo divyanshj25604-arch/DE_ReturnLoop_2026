@@ -1,0 +1,96 @@
+=== R19 run 1 ===
+Sort  (cost=1972137.32..1972137.63 rows=125 width=36) (actual time=2148.565..2148.569 rows=125 loops=1)
+  Sort Key: ((SubPlan 1)) DESC
+  Sort Method: quicksort  Memory: 31kB
+  Buffers: shared hit=767198
+  InitPlan 2
+    ->  Seq Scan on categories  (cost=0.00..1.15 rows=1 width=4) (actual time=0.003..0.003 rows=1 loops=1)
+          Filter: ((category_name)::text = 'Fruits & Vegetables'::text)
+          Rows Removed by Filter: 11
+          Buffers: shared hit=1
+  ->  Seq Scan on products p  (cost=0.00..1972131.82 rows=125 width=36) (actual time=20.278..2148.454 rows=125 loops=1)
+        Filter: (category_id = (InitPlan 2).col1)
+        Rows Removed by Filter: 1375
+        Buffers: shared hit=767195
+        SubPlan 1
+          ->  Aggregate  (cost=15776.69..15776.70 rows=1 width=8) (actual time=17.185..17.185 rows=1 loops=125)
+                Buffers: shared hit=767168
+                ->  Nested Loop  (cost=0.42..15776.63 rows=24 width=4) (actual time=16.257..17.181 rows=25 loops=125)
+                      Buffers: shared hit=767168
+                      ->  Seq Scan on order_items oi  (cost=0.00..12773.50 rows=450 width=8) (actual time=0.034..16.480 rows=450 loops=125)
+                            Filter: (product_id = p.product_id)
+                            Rows Removed by Filter: 674550
+                            Buffers: shared hit=542000
+                      ->  Index Scan using orders_pkey on orders o  (cost=0.42..6.67 rows=1 width=4) (actual time=0.001..0.001 rows=0 loops=56292)
+                            Index Cond: (order_id = oi.order_id)
+                            Filter: ((placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                            Rows Removed by Filter: 1
+                            Buffers: shared hit=225168
+Planning:
+  Buffers: shared hit=312
+Planning Time: 0.564 ms
+Execution Time: 2148.610 ms
+=== R19 run 2 ===
+Sort  (cost=1972137.32..1972137.63 rows=125 width=36) (actual time=2017.229..2017.233 rows=125 loops=1)
+  Sort Key: ((SubPlan 1)) DESC
+  Sort Method: quicksort  Memory: 31kB
+  Buffers: shared hit=767198
+  InitPlan 2
+    ->  Seq Scan on categories  (cost=0.00..1.15 rows=1 width=4) (actual time=0.004..0.004 rows=1 loops=1)
+          Filter: ((category_name)::text = 'Fruits & Vegetables'::text)
+          Rows Removed by Filter: 11
+          Buffers: shared hit=1
+  ->  Seq Scan on products p  (cost=0.00..1972131.82 rows=125 width=36) (actual time=19.578..2017.170 rows=125 loops=1)
+        Filter: (category_id = (InitPlan 2).col1)
+        Rows Removed by Filter: 1375
+        Buffers: shared hit=767195
+        SubPlan 1
+          ->  Aggregate  (cost=15776.69..15776.70 rows=1 width=8) (actual time=16.136..16.136 rows=1 loops=125)
+                Buffers: shared hit=767168
+                ->  Nested Loop  (cost=0.42..15776.63 rows=24 width=4) (actual time=15.271..16.134 rows=25 loops=125)
+                      Buffers: shared hit=767168
+                      ->  Seq Scan on order_items oi  (cost=0.00..12773.50 rows=450 width=8) (actual time=0.032..15.614 rows=450 loops=125)
+                            Filter: (product_id = p.product_id)
+                            Rows Removed by Filter: 674550
+                            Buffers: shared hit=542000
+                      ->  Index Scan using orders_pkey on orders o  (cost=0.42..6.67 rows=1 width=4) (actual time=0.001..0.001 rows=0 loops=56292)
+                            Index Cond: (order_id = oi.order_id)
+                            Filter: ((placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                            Rows Removed by Filter: 1
+                            Buffers: shared hit=225168
+Planning:
+  Buffers: shared hit=312
+Planning Time: 0.609 ms
+Execution Time: 2017.322 ms
+=== R19 run 3 ===
+Sort  (cost=1972137.32..1972137.63 rows=125 width=36) (actual time=2013.111..2013.115 rows=125 loops=1)
+  Sort Key: ((SubPlan 1)) DESC
+  Sort Method: quicksort  Memory: 31kB
+  Buffers: shared hit=767198
+  InitPlan 2
+    ->  Seq Scan on categories  (cost=0.00..1.15 rows=1 width=4) (actual time=0.003..0.003 rows=1 loops=1)
+          Filter: ((category_name)::text = 'Fruits & Vegetables'::text)
+          Rows Removed by Filter: 11
+          Buffers: shared hit=1
+  ->  Seq Scan on products p  (cost=0.00..1972131.82 rows=125 width=36) (actual time=18.853..2013.077 rows=125 loops=1)
+        Filter: (category_id = (InitPlan 2).col1)
+        Rows Removed by Filter: 1375
+        Buffers: shared hit=767195
+        SubPlan 1
+          ->  Aggregate  (cost=15776.69..15776.70 rows=1 width=8) (actual time=16.103..16.103 rows=1 loops=125)
+                Buffers: shared hit=767168
+                ->  Nested Loop  (cost=0.42..15776.63 rows=24 width=4) (actual time=15.242..16.102 rows=25 loops=125)
+                      Buffers: shared hit=767168
+                      ->  Seq Scan on order_items oi  (cost=0.00..12773.50 rows=450 width=8) (actual time=0.032..15.589 rows=450 loops=125)
+                            Filter: (product_id = p.product_id)
+                            Rows Removed by Filter: 674550
+                            Buffers: shared hit=542000
+                      ->  Index Scan using orders_pkey on orders o  (cost=0.42..6.67 rows=1 width=4) (actual time=0.001..0.001 rows=0 loops=56292)
+                            Index Cond: (order_id = oi.order_id)
+                            Filter: ((placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                            Rows Removed by Filter: 1
+                            Buffers: shared hit=225168
+Planning:
+  Buffers: shared hit=312
+Planning Time: 0.467 ms
+Execution Time: 2013.142 ms

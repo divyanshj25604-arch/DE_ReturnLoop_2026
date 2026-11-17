@@ -1,0 +1,48 @@
+=== W04 run 1 ===
+Update on store_inventory  (cost=20.22..1039.44 rows=0 width=0) (actual time=0.803..0.804 rows=0 loops=1)
+  Buffers: shared hit=1663 dirtied=4 written=2
+  ->  Bitmap Heap Scan on store_inventory  (cost=20.22..1039.44 rows=349 width=18) (actual time=0.029..0.084 rows=229 loops=1)
+        Recheck Cond: (store_id = 43)
+        Filter: (quantity_on_hand <= reorder_level)
+        Rows Removed by Filter: 821
+        Heap Blocks: exact=9
+        Buffers: shared hit=14
+        ->  Bitmap Index Scan on pk_store_inventory  (cost=0.00..20.14 rows=1046 width=0) (actual time=0.021..0.021 rows=1055 loops=1)
+              Index Cond: (store_id = 43)
+              Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=73
+Planning Time: 0.132 ms
+Execution Time: 0.841 ms
+=== W04 run 2 ===
+Update on store_inventory  (cost=20.22..1039.44 rows=0 width=0) (actual time=0.604..0.604 rows=0 loops=1)
+  Buffers: shared hit=1881 dirtied=3 written=1
+  ->  Bitmap Heap Scan on store_inventory  (cost=20.22..1039.44 rows=349 width=18) (actual time=0.035..0.086 rows=229 loops=1)
+        Recheck Cond: (store_id = 43)
+        Filter: (quantity_on_hand <= reorder_level)
+        Rows Removed by Filter: 821
+        Heap Blocks: exact=11
+        Buffers: shared hit=18
+        ->  Bitmap Index Scan on pk_store_inventory  (cost=0.00..20.14 rows=1046 width=0) (actual time=0.026..0.026 rows=1282 loops=1)
+              Index Cond: (store_id = 43)
+              Buffers: shared hit=7
+Planning:
+  Buffers: shared hit=73
+Planning Time: 0.131 ms
+Execution Time: 0.641 ms
+=== W04 run 3 ===
+Update on store_inventory  (cost=20.22..1039.44 rows=0 width=0) (actual time=0.446..0.446 rows=0 loops=1)
+  Buffers: shared hit=2022 dirtied=2
+  ->  Bitmap Heap Scan on store_inventory  (cost=20.22..1039.44 rows=349 width=18) (actual time=0.040..0.092 rows=229 loops=1)
+        Recheck Cond: (store_id = 43)
+        Filter: (quantity_on_hand <= reorder_level)
+        Rows Removed by Filter: 821
+        Heap Blocks: exact=13
+        Buffers: shared hit=21
+        ->  Bitmap Index Scan on pk_store_inventory  (cost=0.00..20.14 rows=1046 width=0) (actual time=0.031..0.031 rows=1427 loops=1)
+              Index Cond: (store_id = 43)
+              Buffers: shared hit=8
+Planning:
+  Buffers: shared hit=73
+Planning Time: 0.139 ms
+Execution Time: 0.487 ms

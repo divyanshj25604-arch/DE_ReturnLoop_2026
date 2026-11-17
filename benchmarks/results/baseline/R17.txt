@@ -1,0 +1,78 @@
+=== R17 run 1 ===
+GroupAggregate  (cost=4535.86..4554.61 rows=750 width=44) (actual time=29.342..32.557 rows=60 loops=1)
+  Group Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+  Buffers: shared hit=2450
+  ->  Sort  (cost=4535.86..4537.74 rows=750 width=15) (actual time=29.257..30.349 rows=49725 loops=1)
+        Sort Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+        Sort Method: quicksort  Memory: 3479kB
+        Buffers: shared hit=2450
+        ->  Nested Loop  (cost=0.15..4500.05 rows=750 width=15) (actual time=8.676..25.557 rows=49725 loops=1)
+              Buffers: shared hit=2444
+              ->  Seq Scan on orders o  (cost=0.00..4458.00 rows=750 width=15) (actual time=8.660..14.544 rows=49725 loops=1)
+                    Filter: (EXTRACT(year FROM placed_at) = '2026'::numeric)
+                    Rows Removed by Filter: 100275
+                    Buffers: shared hit=2208
+              ->  Memoize  (cost=0.15..0.19 rows=1 width=8) (actual time=0.000..0.000 rows=1 loops=49725)
+                    Cache Key: o.store_id
+                    Cache Mode: logical
+                    Hits: 49607  Misses: 118  Evictions: 0  Overflows: 0  Memory Usage: 13kB
+                    Buffers: shared hit=236
+                    ->  Index Scan using dark_stores_pkey on dark_stores s  (cost=0.14..0.18 rows=1 width=8) (actual time=0.000..0.000 rows=1 loops=118)
+                          Index Cond: (store_id = o.store_id)
+                          Buffers: shared hit=236
+Planning:
+  Buffers: shared hit=181
+Planning Time: 0.301 ms
+Execution Time: 32.586 ms
+=== R17 run 2 ===
+GroupAggregate  (cost=4535.86..4554.61 rows=750 width=44) (actual time=27.740..30.462 rows=60 loops=1)
+  Group Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+  Buffers: shared hit=2450
+  ->  Sort  (cost=4535.86..4537.74 rows=750 width=15) (actual time=27.664..28.521 rows=49725 loops=1)
+        Sort Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+        Sort Method: quicksort  Memory: 3479kB
+        Buffers: shared hit=2450
+        ->  Nested Loop  (cost=0.15..4500.05 rows=750 width=15) (actual time=8.791..24.315 rows=49725 loops=1)
+              Buffers: shared hit=2444
+              ->  Seq Scan on orders o  (cost=0.00..4458.00 rows=750 width=15) (actual time=8.774..14.040 rows=49725 loops=1)
+                    Filter: (EXTRACT(year FROM placed_at) = '2026'::numeric)
+                    Rows Removed by Filter: 100275
+                    Buffers: shared hit=2208
+              ->  Memoize  (cost=0.15..0.19 rows=1 width=8) (actual time=0.000..0.000 rows=1 loops=49725)
+                    Cache Key: o.store_id
+                    Cache Mode: logical
+                    Hits: 49607  Misses: 118  Evictions: 0  Overflows: 0  Memory Usage: 13kB
+                    Buffers: shared hit=236
+                    ->  Index Scan using dark_stores_pkey on dark_stores s  (cost=0.14..0.18 rows=1 width=8) (actual time=0.000..0.000 rows=1 loops=118)
+                          Index Cond: (store_id = o.store_id)
+                          Buffers: shared hit=236
+Planning:
+  Buffers: shared hit=181
+Planning Time: 0.291 ms
+Execution Time: 30.490 ms
+=== R17 run 3 ===
+GroupAggregate  (cost=4535.86..4554.61 rows=750 width=44) (actual time=33.099..35.865 rows=60 loops=1)
+  Group Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+  Buffers: shared hit=2450
+  ->  Sort  (cost=4535.86..4537.74 rows=750 width=15) (actual time=33.007..33.902 rows=49725 loops=1)
+        Sort Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+        Sort Method: quicksort  Memory: 3479kB
+        Buffers: shared hit=2450
+        ->  Nested Loop  (cost=0.15..4500.05 rows=750 width=15) (actual time=10.563..28.666 rows=49725 loops=1)
+              Buffers: shared hit=2444
+              ->  Seq Scan on orders o  (cost=0.00..4458.00 rows=750 width=15) (actual time=10.543..16.628 rows=49725 loops=1)
+                    Filter: (EXTRACT(year FROM placed_at) = '2026'::numeric)
+                    Rows Removed by Filter: 100275
+                    Buffers: shared hit=2208
+              ->  Memoize  (cost=0.15..0.19 rows=1 width=8) (actual time=0.000..0.000 rows=1 loops=49725)
+                    Cache Key: o.store_id
+                    Cache Mode: logical
+                    Hits: 49607  Misses: 118  Evictions: 0  Overflows: 0  Memory Usage: 13kB
+                    Buffers: shared hit=236
+                    ->  Index Scan using dark_stores_pkey on dark_stores s  (cost=0.14..0.18 rows=1 width=8) (actual time=0.000..0.000 rows=1 loops=118)
+                          Index Cond: (store_id = o.store_id)
+                          Buffers: shared hit=236
+Planning:
+  Buffers: shared hit=181
+Planning Time: 0.966 ms
+Execution Time: 35.913 ms
