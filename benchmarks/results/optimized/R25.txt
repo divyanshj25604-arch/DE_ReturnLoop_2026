@@ -1,0 +1,99 @@
+=== R25 run 1 ===
+Limit  (cost=3450.52..3450.57 rows=20 width=44) (actual time=18.875..18.878 rows=20 loops=1)
+  Buffers: shared hit=1279 read=7
+  ->  Sort  (cost=3450.52..3470.03 rows=7804 width=44) (actual time=18.875..18.876 rows=20 loops=1)
+        Sort Key: (count(*)) DESC, (sum(o.total_amount)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=1279 read=7
+        ->  HashAggregate  (cost=3145.31..3242.86 rows=7804 width=44) (actual time=17.697..18.469 rows=4423 loops=1)
+              Group Key: o.customer_id
+              Batches: 1  Memory Usage: 2193kB
+              Buffers: shared hit=1273 read=7
+              ->  Hash Join  (cost=659.22..3086.78 rows=7804 width=9) (actual time=1.368..15.946 rows=7490 loops=1)
+                    Hash Cond: (o.customer_id = c.customer_id)
+                    Buffers: shared hit=1273 read=7
+                    ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..2301.68 rows=48108 width=9) (actual time=0.015..9.808 rows=47725 loops=1)
+                          Index Cond: (placed_at >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
+                          Filter: ((status)::text = 'DELIVERED'::text)
+                          Rows Removed by Filter: 2000
+                          Buffers: shared hit=855
+                    ->  Hash  (cost=577.69..577.69 rows=6489 width=4) (actual time=1.346..1.346 rows=6400 loops=1)
+                          Buckets: 8192  Batches: 1  Memory Usage: 289kB
+                          Buffers: shared hit=418 read=7
+                          ->  Bitmap Heap Scan on customers c  (cost=78.58..577.69 rows=6489 width=4) (actual time=0.548..1.109 rows=6400 loops=1)
+                                Recheck Cond: (city_id = 2)
+                                Heap Blocks: exact=418
+                                Buffers: shared hit=418 read=7
+                                ->  Bitmap Index Scan on idx_customers_city_id  (cost=0.00..76.96 rows=6489 width=0) (actual time=0.528..0.528 rows=6400 loops=1)
+                                      Index Cond: (city_id = 2)
+                                      Buffers: shared read=7
+Planning:
+  Buffers: shared hit=332 read=4
+Planning Time: 1.672 ms
+Execution Time: 18.928 ms
+=== R25 run 2 ===
+Limit  (cost=3450.52..3450.57 rows=20 width=44) (actual time=16.158..16.160 rows=20 loops=1)
+  Buffers: shared hit=1286
+  ->  Sort  (cost=3450.52..3470.03 rows=7804 width=44) (actual time=16.157..16.159 rows=20 loops=1)
+        Sort Key: (count(*)) DESC, (sum(o.total_amount)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=1286
+        ->  HashAggregate  (cost=3145.31..3242.86 rows=7804 width=44) (actual time=15.111..15.814 rows=4423 loops=1)
+              Group Key: o.customer_id
+              Batches: 1  Memory Usage: 2193kB
+              Buffers: shared hit=1280
+              ->  Hash Join  (cost=659.22..3086.78 rows=7804 width=9) (actual time=1.204..13.597 rows=7490 loops=1)
+                    Hash Cond: (o.customer_id = c.customer_id)
+                    Buffers: shared hit=1280
+                    ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..2301.68 rows=48108 width=9) (actual time=0.016..8.312 rows=47725 loops=1)
+                          Index Cond: (placed_at >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
+                          Filter: ((status)::text = 'DELIVERED'::text)
+                          Rows Removed by Filter: 2000
+                          Buffers: shared hit=855
+                    ->  Hash  (cost=577.69..577.69 rows=6489 width=4) (actual time=1.180..1.180 rows=6400 loops=1)
+                          Buckets: 8192  Batches: 1  Memory Usage: 289kB
+                          Buffers: shared hit=425
+                          ->  Bitmap Heap Scan on customers c  (cost=78.58..577.69 rows=6489 width=4) (actual time=0.086..0.840 rows=6400 loops=1)
+                                Recheck Cond: (city_id = 2)
+                                Heap Blocks: exact=418
+                                Buffers: shared hit=425
+                                ->  Bitmap Index Scan on idx_customers_city_id  (cost=0.00..76.96 rows=6489 width=0) (actual time=0.064..0.064 rows=6400 loops=1)
+                                      Index Cond: (city_id = 2)
+                                      Buffers: shared hit=7
+Planning:
+  Buffers: shared hit=336
+Planning Time: 0.978 ms
+Execution Time: 16.233 ms
+=== R25 run 3 ===
+Limit  (cost=3450.52..3450.57 rows=20 width=44) (actual time=14.450..14.452 rows=20 loops=1)
+  Buffers: shared hit=1286
+  ->  Sort  (cost=3450.52..3470.03 rows=7804 width=44) (actual time=14.449..14.450 rows=20 loops=1)
+        Sort Key: (count(*)) DESC, (sum(o.total_amount)) DESC
+        Sort Method: top-N heapsort  Memory: 27kB
+        Buffers: shared hit=1286
+        ->  HashAggregate  (cost=3145.31..3242.86 rows=7804 width=44) (actual time=13.515..14.115 rows=4423 loops=1)
+              Group Key: o.customer_id
+              Batches: 1  Memory Usage: 2193kB
+              Buffers: shared hit=1280
+              ->  Hash Join  (cost=659.22..3086.78 rows=7804 width=9) (actual time=0.996..12.177 rows=7490 loops=1)
+                    Hash Cond: (o.customer_id = c.customer_id)
+                    Buffers: shared hit=1280
+                    ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..2301.68 rows=48108 width=9) (actual time=0.016..7.566 rows=47725 loops=1)
+                          Index Cond: (placed_at >= '2026-01-01 00:00:00+05:30'::timestamp with time zone)
+                          Filter: ((status)::text = 'DELIVERED'::text)
+                          Rows Removed by Filter: 2000
+                          Buffers: shared hit=855
+                    ->  Hash  (cost=577.69..577.69 rows=6489 width=4) (actual time=0.972..0.972 rows=6400 loops=1)
+                          Buckets: 8192  Batches: 1  Memory Usage: 289kB
+                          Buffers: shared hit=425
+                          ->  Bitmap Heap Scan on customers c  (cost=78.58..577.69 rows=6489 width=4) (actual time=0.091..0.707 rows=6400 loops=1)
+                                Recheck Cond: (city_id = 2)
+                                Heap Blocks: exact=418
+                                Buffers: shared hit=425
+                                ->  Bitmap Index Scan on idx_customers_city_id  (cost=0.00..76.96 rows=6489 width=0) (actual time=0.069..0.069 rows=6400 loops=1)
+                                      Index Cond: (city_id = 2)
+                                      Buffers: shared hit=7
+Planning:
+  Buffers: shared hit=336
+Planning Time: 0.532 ms
+Execution Time: 14.501 ms

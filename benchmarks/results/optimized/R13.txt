@@ -1,0 +1,90 @@
+=== R13 run 1 ===
+Hash Right Anti Join  (cost=1539.84..13310.28 rows=1253 width=28) (actual time=38.917..39.770 rows=1250 loops=1)
+  Hash Cond: (oi.substitute_product_id = p.product_id)
+  Buffers: shared hit=4889
+  ->  Gather  (cost=1486.55..13099.76 rows=37264 width=4) (actual time=33.843..37.224 rows=37086 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=4869
+        ->  Hash Join  (cost=486.55..8373.36 rows=15527 width=4) (actual time=27.567..29.795 rows=12362 loops=3)
+              Hash Cond: (oi.order_id = o.order_id)
+              Buffers: shared hit=4869
+              ->  Parallel Seq Scan on order_items oi  (cost=0.00..7148.50 rows=281250 width=8) (actual time=0.017..10.484 rows=225000 loops=3)
+                    Buffers: shared hit=4336
+              ->  Hash  (cost=383.04..383.04 rows=8281 width=4) (actual time=4.033..4.034 rows=8241 loops=3)
+                    Buckets: 16384  Batches: 1  Memory Usage: 418kB
+                    Buffers: shared hit=437
+                    ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..383.04 rows=8281 width=4) (actual time=0.038..2.561 rows=8241 loops=3)
+                          Index Cond: ((placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                          Buffers: shared hit=437
+  ->  Hash  (cost=35.00..35.00 rows=1463 width=28) (actual time=0.951..0.951 rows=1463 loops=1)
+        Buckets: 2048  Batches: 1  Memory Usage: 103kB
+        Buffers: shared hit=20
+        ->  Seq Scan on products p  (cost=0.00..35.00 rows=1463 width=28) (actual time=0.016..0.554 rows=1463 loops=1)
+              Filter: is_active
+              Rows Removed by Filter: 37
+              Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=451
+Planning Time: 2.508 ms
+Execution Time: 39.878 ms
+=== R13 run 2 ===
+Hash Right Anti Join  (cost=1539.84..13310.28 rows=1253 width=28) (actual time=24.474..24.978 rows=1250 loops=1)
+  Hash Cond: (oi.substitute_product_id = p.product_id)
+  Buffers: shared hit=4889
+  ->  Gather  (cost=1486.55..13099.76 rows=37264 width=4) (actual time=20.887..23.404 rows=37086 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=4869
+        ->  Hash Join  (cost=486.55..8373.36 rows=15527 width=4) (actual time=18.800..20.556 rows=12362 loops=3)
+              Hash Cond: (oi.order_id = o.order_id)
+              Buffers: shared hit=4869
+              ->  Parallel Seq Scan on order_items oi  (cost=0.00..7148.50 rows=281250 width=8) (actual time=0.006..8.035 rows=225000 loops=3)
+                    Buffers: shared hit=4336
+              ->  Hash  (cost=383.04..383.04 rows=8281 width=4) (actual time=1.578..1.578 rows=8241 loops=3)
+                    Buckets: 16384  Batches: 1  Memory Usage: 418kB
+                    Buffers: shared hit=437
+                    ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..383.04 rows=8281 width=4) (actual time=0.015..0.959 rows=8241 loops=3)
+                          Index Cond: ((placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                          Buffers: shared hit=437
+  ->  Hash  (cost=35.00..35.00 rows=1463 width=28) (actual time=0.338..0.338 rows=1463 loops=1)
+        Buckets: 2048  Batches: 1  Memory Usage: 103kB
+        Buffers: shared hit=20
+        ->  Seq Scan on products p  (cost=0.00..35.00 rows=1463 width=28) (actual time=0.006..0.189 rows=1463 loops=1)
+              Filter: is_active
+              Rows Removed by Filter: 37
+              Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=451
+Planning Time: 0.885 ms
+Execution Time: 25.043 ms
+=== R13 run 3 ===
+Hash Right Anti Join  (cost=1539.84..13310.28 rows=1253 width=28) (actual time=20.486..21.048 rows=1250 loops=1)
+  Hash Cond: (oi.substitute_product_id = p.product_id)
+  Buffers: shared hit=4889
+  ->  Gather  (cost=1486.55..13099.76 rows=37264 width=4) (actual time=17.630..19.850 rows=37086 loops=1)
+        Workers Planned: 2
+        Workers Launched: 2
+        Buffers: shared hit=4869
+        ->  Hash Join  (cost=486.55..8373.36 rows=15527 width=4) (actual time=16.063..17.516 rows=12362 loops=3)
+              Hash Cond: (oi.order_id = o.order_id)
+              Buffers: shared hit=4869
+              ->  Parallel Seq Scan on order_items oi  (cost=0.00..7148.50 rows=281250 width=8) (actual time=0.004..7.016 rows=225000 loops=3)
+                    Buffers: shared hit=4336
+              ->  Hash  (cost=383.04..383.04 rows=8281 width=4) (actual time=1.183..1.183 rows=8241 loops=3)
+                    Buckets: 16384  Batches: 1  Memory Usage: 418kB
+                    Buffers: shared hit=437
+                    ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..383.04 rows=8281 width=4) (actual time=0.010..0.722 rows=8241 loops=3)
+                          Index Cond: ((placed_at >= '2026-06-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2026-07-01 00:00:00+05:30'::timestamp with time zone))
+                          Buffers: shared hit=437
+  ->  Hash  (cost=35.00..35.00 rows=1463 width=28) (actual time=0.189..0.189 rows=1463 loops=1)
+        Buckets: 2048  Batches: 1  Memory Usage: 103kB
+        Buffers: shared hit=20
+        ->  Seq Scan on products p  (cost=0.00..35.00 rows=1463 width=28) (actual time=0.003..0.108 rows=1463 loops=1)
+              Filter: is_active
+              Rows Removed by Filter: 37
+              Buffers: shared hit=20
+Planning:
+  Buffers: shared hit=451
+Planning Time: 0.813 ms
+Execution Time: 21.098 ms

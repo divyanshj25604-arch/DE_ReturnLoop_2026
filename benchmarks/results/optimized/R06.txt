@@ -1,0 +1,30 @@
+=== R06 run 1 ===
+Limit  (cost=0.42..5.44 rows=1 width=51) (actual time=0.659..0.660 rows=1 loops=1)
+  Buffers: shared hit=1 read=3
+  ->  Index Scan using idx_orders_customer_placed on orders  (cost=0.42..20.49 rows=4 width=51) (actual time=0.658..0.658 rows=1 loops=1)
+        Index Cond: (customer_id = 1027)
+        Buffers: shared hit=1 read=3
+Planning:
+  Buffers: shared hit=190
+Planning Time: 1.402 ms
+Execution Time: 0.692 ms
+=== R06 run 2 ===
+Limit  (cost=0.42..5.44 rows=1 width=51) (actual time=0.039..0.041 rows=1 loops=1)
+  Buffers: shared hit=4
+  ->  Index Scan using idx_orders_customer_placed on orders  (cost=0.42..20.49 rows=4 width=51) (actual time=0.038..0.038 rows=1 loops=1)
+        Index Cond: (customer_id = 1027)
+        Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=190
+Planning Time: 1.518 ms
+Execution Time: 0.081 ms
+=== R06 run 3 ===
+Limit  (cost=0.42..5.44 rows=1 width=51) (actual time=0.027..0.028 rows=1 loops=1)
+  Buffers: shared hit=4
+  ->  Index Scan using idx_orders_customer_placed on orders  (cost=0.42..20.49 rows=4 width=51) (actual time=0.026..0.026 rows=1 loops=1)
+        Index Cond: (customer_id = 1027)
+        Buffers: shared hit=4
+Planning:
+  Buffers: shared hit=190
+Planning Time: 1.143 ms
+Execution Time: 0.059 ms

@@ -1,0 +1,69 @@
+=== R17 run 1 ===
+GroupAggregate  (cost=6484.43..7738.50 rows=50163 width=44) (actual time=13.505..16.275 rows=60 loops=1)
+  Group Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+  Buffers: shared hit=863
+  ->  Sort  (cost=6484.43..6609.83 rows=50163 width=15) (actual time=13.420..14.254 rows=49725 loops=1)
+        Sort Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+        Sort Method: quicksort  Memory: 3479kB
+        Buffers: shared hit=863
+        ->  Hash Join  (cost=5.12..2568.12 rows=50163 width=15) (actual time=0.026..9.837 rows=49725 loops=1)
+              Hash Cond: (o.store_id = s.store_id)
+              Buffers: shared hit=857
+              ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..2301.68 rows=50163 width=15) (actual time=0.005..2.860 rows=49725 loops=1)
+                    Index Cond: ((placed_at >= '2026-01-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2027-01-01 00:00:00+05:30'::timestamp with time zone))
+                    Buffers: shared hit=855
+              ->  Hash  (cost=3.20..3.20 rows=120 width=8) (actual time=0.013..0.014 rows=120 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 13kB
+                    Buffers: shared hit=2
+                    ->  Seq Scan on dark_stores s  (cost=0.00..3.20 rows=120 width=8) (actual time=0.002..0.007 rows=120 loops=1)
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=288
+Planning Time: 0.440 ms
+Execution Time: 16.300 ms
+=== R17 run 2 ===
+GroupAggregate  (cost=6484.43..7738.50 rows=50163 width=44) (actual time=12.507..15.380 rows=60 loops=1)
+  Group Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+  Buffers: shared hit=863
+  ->  Sort  (cost=6484.43..6609.83 rows=50163 width=15) (actual time=12.431..13.360 rows=49725 loops=1)
+        Sort Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+        Sort Method: quicksort  Memory: 3479kB
+        Buffers: shared hit=863
+        ->  Hash Join  (cost=5.12..2568.12 rows=50163 width=15) (actual time=0.026..9.121 rows=49725 loops=1)
+              Hash Cond: (o.store_id = s.store_id)
+              Buffers: shared hit=857
+              ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..2301.68 rows=50163 width=15) (actual time=0.005..2.533 rows=49725 loops=1)
+                    Index Cond: ((placed_at >= '2026-01-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2027-01-01 00:00:00+05:30'::timestamp with time zone))
+                    Buffers: shared hit=855
+              ->  Hash  (cost=3.20..3.20 rows=120 width=8) (actual time=0.013..0.013 rows=120 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 13kB
+                    Buffers: shared hit=2
+                    ->  Seq Scan on dark_stores s  (cost=0.00..3.20 rows=120 width=8) (actual time=0.002..0.006 rows=120 loops=1)
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=288
+Planning Time: 0.462 ms
+Execution Time: 15.406 ms
+=== R17 run 3 ===
+GroupAggregate  (cost=6484.43..7738.50 rows=50163 width=44) (actual time=33.354..36.040 rows=60 loops=1)
+  Group Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+  Buffers: shared hit=863
+  ->  Sort  (cost=6484.43..6609.83 rows=50163 width=15) (actual time=33.272..34.144 rows=49725 loops=1)
+        Sort Key: s.city_id, (date_trunc('month'::text, o.placed_at))
+        Sort Method: quicksort  Memory: 3479kB
+        Buffers: shared hit=863
+        ->  Hash Join  (cost=5.12..2568.12 rows=50163 width=15) (actual time=0.028..23.991 rows=49725 loops=1)
+              Hash Cond: (o.store_id = s.store_id)
+              Buffers: shared hit=857
+              ->  Index Scan using idx_orders_placed_at on orders o  (cost=0.42..2301.68 rows=50163 width=15) (actual time=0.005..9.064 rows=49725 loops=1)
+                    Index Cond: ((placed_at >= '2026-01-01 00:00:00+05:30'::timestamp with time zone) AND (placed_at < '2027-01-01 00:00:00+05:30'::timestamp with time zone))
+                    Buffers: shared hit=855
+              ->  Hash  (cost=3.20..3.20 rows=120 width=8) (actual time=0.014..0.014 rows=120 loops=1)
+                    Buckets: 1024  Batches: 1  Memory Usage: 13kB
+                    Buffers: shared hit=2
+                    ->  Seq Scan on dark_stores s  (cost=0.00..3.20 rows=120 width=8) (actual time=0.002..0.007 rows=120 loops=1)
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=288
+Planning Time: 0.491 ms
+Execution Time: 36.069 ms

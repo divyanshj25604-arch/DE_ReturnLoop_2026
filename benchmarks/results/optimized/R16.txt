@@ -1,0 +1,57 @@
+=== R16 run 1 ===
+Sort  (cost=6238.24..6238.74 rows=200 width=24) (actual time=25.359..25.360 rows=18 loops=1)
+  Sort Key: (date_trunc('month'::text, min(orders.placed_at)))
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=2211
+  ->  HashAggregate  (cost=6228.60..6230.60 rows=200 width=24) (actual time=25.350..25.351 rows=18 loops=1)
+        Group Key: date_trunc('month'::text, min(orders.placed_at))
+        Batches: 1  Memory Usage: 40kB
+        Buffers: shared hit=2208
+        ->  HashAggregate  (cost=5208.00..5633.25 rows=34020 width=13) (actual time=19.000..23.440 rows=39011 loops=1)
+              Group Key: orders.customer_id
+              Batches: 1  Memory Usage: 4625kB
+              Buffers: shared hit=2208
+              ->  Seq Scan on orders  (cost=0.00..3708.00 rows=150000 width=12) (actual time=0.004..4.688 rows=150000 loops=1)
+                    Buffers: shared hit=2208
+Planning:
+  Buffers: shared hit=179
+Planning Time: 0.286 ms
+Execution Time: 25.495 ms
+=== R16 run 2 ===
+Sort  (cost=6238.24..6238.74 rows=200 width=24) (actual time=21.491..21.491 rows=18 loops=1)
+  Sort Key: (date_trunc('month'::text, min(orders.placed_at)))
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=2211
+  ->  HashAggregate  (cost=6228.60..6230.60 rows=200 width=24) (actual time=21.481..21.483 rows=18 loops=1)
+        Group Key: date_trunc('month'::text, min(orders.placed_at))
+        Batches: 1  Memory Usage: 40kB
+        Buffers: shared hit=2208
+        ->  HashAggregate  (cost=5208.00..5633.25 rows=34020 width=13) (actual time=16.119..19.801 rows=39011 loops=1)
+              Group Key: orders.customer_id
+              Batches: 1  Memory Usage: 4625kB
+              Buffers: shared hit=2208
+              ->  Seq Scan on orders  (cost=0.00..3708.00 rows=150000 width=12) (actual time=0.003..4.090 rows=150000 loops=1)
+                    Buffers: shared hit=2208
+Planning:
+  Buffers: shared hit=179
+Planning Time: 0.300 ms
+Execution Time: 21.605 ms
+=== R16 run 3 ===
+Sort  (cost=6238.24..6238.74 rows=200 width=24) (actual time=21.322..21.323 rows=18 loops=1)
+  Sort Key: (date_trunc('month'::text, min(orders.placed_at)))
+  Sort Method: quicksort  Memory: 25kB
+  Buffers: shared hit=2211
+  ->  HashAggregate  (cost=6228.60..6230.60 rows=200 width=24) (actual time=21.313..21.314 rows=18 loops=1)
+        Group Key: date_trunc('month'::text, min(orders.placed_at))
+        Batches: 1  Memory Usage: 40kB
+        Buffers: shared hit=2208
+        ->  HashAggregate  (cost=5208.00..5633.25 rows=34020 width=13) (actual time=15.778..19.548 rows=39011 loops=1)
+              Group Key: orders.customer_id
+              Batches: 1  Memory Usage: 4625kB
+              Buffers: shared hit=2208
+              ->  Seq Scan on orders  (cost=0.00..3708.00 rows=150000 width=12) (actual time=0.003..3.813 rows=150000 loops=1)
+                    Buffers: shared hit=2208
+Planning:
+  Buffers: shared hit=179
+Planning Time: 0.294 ms
+Execution Time: 21.452 ms
